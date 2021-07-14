@@ -1,3 +1,3 @@
-module github.com/MoeZilla/waifuPicgp
+module github.com/MoeZilla/waifuPicgo
 
 go 1.17
