@@ -10,7 +10,7 @@ import (
 
 func sfw(category  string)(err error){
         var waifu struct {
-		Url string `json:"url"`
+		 string `json:"url"`
 	}
         URL := fmt.Sprintf("https://api.waifu.pics/sfw/", category)
 	resp, err := http.Get(URL)
@@ -26,7 +26,7 @@ func sfw(category  string)(err error){
 	if err != nil {
 		return nil, err
 	}
-	return waifu.Url, nil
+	return waifu.img, nil
 }
 
 func nsfw(category  string)(err error){
