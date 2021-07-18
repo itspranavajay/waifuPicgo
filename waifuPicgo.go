@@ -2,50 +2,34 @@ package waifuPicgo
 
 import (
 	"encoding/json"
-        "errors"
 	"fmt"
-	"io"
 	"net/http"
 )
 
-func sfw(category  string)(err error){
-        var waifu struct {
-		 string `json:"url"`
-	}
-        URL := fmt.Sprintf("https://api.waifu.pics/sfw/",  category)
-	resp, err := http.Get(URL)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	err = json.Unmarshal(body, &waifu)
-	if err != nil {
-		return nil, err
-	}
-	return waifu.img, nil
+type SFW struct {
+	Url string                 `json:"url"`
 }
 
-func nsfw(category  string)(err error){
-        var waifu struct {
-		img string `json:"url"`
-	}
-        URL := fmt.Sprintf("https://api.waifu.pics/nsfw/",  category)
-	resp, err := http.Get(URL)
+type NSFW struct {
+	Url string                 `json:"url"`
+}
+
+func sfw(Category string) (*SFW, error) {
+	resp, err := http.Get(fmt.Sprintf("https://api.waifu.pics/sfw/%v", Category))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
+	var sFw = new(Response)
+	json.NewDecoder(resp.Body).Decode(&sFw)
+	return &sFw.Data.SFW, nil
+
+func nsfw(Category string) (*NSFW, error) {
+	resp, err := http.Get(fmt.Sprintf("https://api.waifu.pics/nsfw/%v", Category))
 	if err != nil {
 		return nil, err
 	}
-	err = json.Unmarshal(body, &waifu)
-	if err != nil {
-		return nil, err
-	}
-	return waifu.img, nil
-}
+	defer resp.Body.Close()
+	var nsFw = new(Response)
+	json.NewDecoder(resp.Body).Decode(&nsFw)
+	return &nsFw.Data.NSFW, nil
